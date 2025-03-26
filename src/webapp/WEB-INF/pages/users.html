@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+
+    <script>
+        function deleteUser(userId) {
+            fetch(`/deleteUser/${userId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `id=${userId}`
+            })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        return response.text().then(text => {
+                            throw new Error(text);
+                        });
+                    }
+                })
+                .catch(error => alert("Failed to delete user: " + error.message));
+        }
+    </script>
+
+</head>
+<body>
+<h1>Users</h1>
+
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Surname</th>
+        <th>Department</th>
+        <th>Salary</th>
+        <th>Actions</th>
+    </tr>
+    <tr th:each="user : ${table}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.name}"></td>
+        <td th:text="${user.surname}"></td>
+        <td th:text="${user.department}"></td>
+        <td th:text="${user.salary}"></td>
+        <td>
+            <button th:attr="onclick='deleteUser(' + ${user.id} + ')'">Delete</button>
+        </td>
+    </tr>
+</table>
+
+<hr>
+
+<h2>Add User</h2>
+<form action="/addUser" method="post">
+    <label>Name: <input type="text" name="name" required></label><br>
+    <label>Surname: <input type="text" name="surname" required></label><br>
+    <label>Department: <input type="text" name="department" required></label><br>
+    <label>Salary: <input type="number" name="salary" required></label><br>
+    <button type="submit">Add User</button>
+</form>
+
+<hr>
+
+<h2>Update User</h2>
+<form action="/updateUser" method="post">
+    <label>ID: <input type="number" name="id" required></label><br>
+    <label>Name: <input type="text" name="name"></label><br>
+    <label>Surname: <input type="text" name="surname"></label><br>
+    <label>Department: <input type="text" name="department"></label><br>
+    <label>Salary: <input type="number" name="salary"></label><br>
+    <button type="submit">Update User</button>
+</form>
+
+</body>
+</html>
