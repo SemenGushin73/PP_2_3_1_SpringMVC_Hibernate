@@ -39,13 +39,13 @@ public class UserServiceImp implements UserService {
         userDao.deleteUser(id);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public User getUserById(Long id) {
         return userDao.getUserById(id);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public List<User> getAllUsers() {
         return userDao.getAllUsers();
